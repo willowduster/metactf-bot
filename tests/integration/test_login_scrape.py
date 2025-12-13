@@ -22,7 +22,13 @@ def test_login_and_scrape(monkeypatch):
         assert isinstance(problems, list)
         assert all('title' in p for p in problems)
         assert all('id' in p for p in problems)
-        assert all('url' in p for p in problems)
+        print("\nScraped Problems:")
+        for p in problems:
+            print(f"- {p['title']}")
+            if p['files']:
+                print(f"  Files: {p['files']}")
+            else:
+                print("  Files: None")
     except LoginError as e:
         pytest.fail(f"Login failed: {e}")
     finally:

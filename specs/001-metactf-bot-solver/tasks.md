@@ -23,8 +23,8 @@ description: "Task list for MetaCTF Bot Solver feature implementation"
 
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
-- [ ] T005 Ensure no direct work is performed on main branch (enforce via branch protection or pre-commit hook)
-- [ ] T006 Commit frequently with descriptive messages (document in CONTRIBUTING.md)
+- [ ] T005 Ensure no direct work is performed on main branch (enforce via branch protection or pre-commit hook) [Constitution]
+- [ ] T006 Commit frequently with descriptive messages (document in CONTRIBUTING.md) [Constitution]
 - [ ] T007 Ensure all browser automation uses Playwright (no headless chromedriver unless directed)
 - [ ] T008 [P] Create base models/entities (Credentials, Problem, Flag) in src/models/
 - [ ] T009 [P] Setup environment configuration management (read .env) in src/lib/config.py
@@ -36,18 +36,20 @@ description: "Task list for MetaCTF Bot Solver feature implementation"
 
 ## Phase 3: User Story 1 - Automated Login and Problem Scraping (Priority: P1) 🎯 MVP
 
-**Goal**: Log in to MetaCTF, select the correct environment, and scrape all active problems (with links and files) to local storage.
 
-**Independent Test**: Run the bot and verify that all active problems and their resources are saved locally for the selected environment.
+**Goal**: Log in to MetaCTF, select the correct environment, list unsolved problems, and allow the user to select a problem to scrape and solve interactively.
 
-### Implementation for User Story 1
+**Independent Test**: Run the bot and verify that the list of unsolved problems is shown, and only the selected problem is scraped and solved.
+
+### Implementation for User Story 1 (Interactive)
 
 - [ ] T011 [P] [US1] Implement MetaCTF login and environment selection in src/services/login.py
-- [ ] T012 [P] [US1] Implement problem list scraping in src/services/scraper.py
-- [ ] T013 [P] [US1] Implement file and link download logic in src/services/scraper.py
-- [ ] T014 [US1] Save scraped problems and files to data/metactf/<date>/ in src/services/scraper.py
-- [ ] T015 [US1] Add validation and error handling for login/scraping in src/services/login.py and src/services/scraper.py
-- [ ] T016 [US1] Add logging for all operations in src/lib/logging.py
+- [ ] T012 [P] [US1] Implement problem list scraping and display in src/services/scraper.py and CLI
+- [ ] T013 [P] [US1] Implement CLI prompt for user to select a problem to solve (src/cli/solve_and_submit.py)
+- [ ] T014 [US1] Scrape, analyze, and attempt to solve only the user-selected problem (src/services/scraper.py, src/services/solver.py)
+- [ ] T015 [US1] Save scraped problem and files for the selected problem to data/metactf/<date>/
+- [ ] T016 [US1] Add validation and error handling for login/scraping in src/services/login.py and src/services/scraper.py
+- [ ] T017 [US1] Add logging for all operations in src/lib/logging.py
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -55,16 +57,17 @@ description: "Task list for MetaCTF Bot Solver feature implementation"
 
 ## Phase 4: User Story 2 - Automated Problem Solving and Flag Submission (Priority: P2)
 
-**Goal**: Analyze saved problems, extract MetaCTF{flag} values, and submit them to MetaCTF.
 
-**Independent Test**: Run the bot on a set of known problems and verify that correct flags are found and submitted.
+**Goal**: After user selects a problem, analyze its files/links, attempt to solve, and submit the flag for only that problem. Repeat or exit as desired by the user.
 
-### Implementation for User Story 2
+**Independent Test**: Run the bot, select a problem, and verify that the correct flag is found and submitted for that problem only.
 
-- [ ] T017 [P] [US2] Implement recursive file and HTML scanning for MetaCTF{flag} in src/services/solver.py
-- [ ] T018 [P] [US2] Implement flag submission logic in src/services/submitter.py
-- [ ] T019 [US2] Add error handling for unsolved or already-solved problems in src/services/solver.py
-- [ ] T020 [US2] Add logging for flag extraction and submission in src/lib/logging.py
+### Implementation for User Story 2 (Interactive)
+
+- [ ] T018 [P] [US2] Implement recursive file and HTML scanning for MetaCTF{flag} in src/services/solver.py (for selected problem)
+- [ ] T019 [P] [US2] Implement flag submission logic in src/services/submitter.py (for selected problem)
+- [ ] T020 [US2] Add error handling for unsolved or already-solved problems in src/services/solver.py
+- [ ] T021 [US2] Add logging for flag extraction and submission in src/lib/logging.py
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -76,11 +79,12 @@ description: "Task list for MetaCTF Bot Solver feature implementation"
 
 **Independent Test**: Simulate errors (e.g., wrong credentials, network issues) and verify that logs are clear and actionable.
 
+
 ### Implementation for User Story 3
 
-- [ ] T021 [P] [US3] Add comprehensive try/except blocks and error messages in all services
-- [ ] T022 [P] [US3] Add log messages for all major actions and errors in src/lib/logging.py
-- [ ] T023 [US3] Add tests for error scenarios in tests/integration/test_errors.py
+- [ ] T022 [P] [US3] Add comprehensive try/except blocks and error messages in all services
+- [ ] T023 [P] [US3] Add log messages for all major actions and errors in src/lib/logging.py
+- [ ] T024 [US3] Add tests for error scenarios in tests/integration/test_errors.py
 
 **Checkpoint**: At this point, all user stories are independently testable and robust
 
@@ -88,11 +92,13 @@ description: "Task list for MetaCTF Bot Solver feature implementation"
 
 ## Final Phase: Polish & Cross-Cutting Concerns
 
-- [ ] T024 [P] Add CLI entrypoint and argument parsing in src/cli/run.py
-- [ ] T025 [P] Add README and update quickstart.md
-- [ ] T026 [P] Add contract and integration tests for all major flows in tests/contract/ and tests/integration/
-- [ ] T027 [P] Review and refactor code for simplicity and clarity
-- [ ] T028 [P] Final code lint/format pass
+
+- [ ] T025 [P] Add CLI entrypoint and argument parsing in src/cli/run.py
+- [ ] T026 [P] Add README and update quickstart.md
+- [ ] T027 [P] Add contract and integration tests for all major flows in tests/contract/ and tests/integration/
+- [ ] T028 [P] Review and refactor code for simplicity and clarity
+- [ ] T029 [P] Final code lint/format pass
+- [ ] T030 [P] Validate performance (single-problem <1 min, <1% error rate) and document results
 
 ---
 

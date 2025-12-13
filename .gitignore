@@ -35,6 +35,9 @@ coverage.xml
 # VS Code
 .vscode/
 
+# Project data and debug artifacts
+data/
+
 # OS
 .DS_Store
 Thumbs.db

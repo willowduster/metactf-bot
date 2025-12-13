@@ -1,6 +1,6 @@
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
-from src.lib.config import Config, ConfigError
-from src.lib.logging import logger
+from lib.config import Config, ConfigError
+from lib.logging import logger
 from datetime import datetime
 import os
 

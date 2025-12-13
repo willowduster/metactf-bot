@@ -8,32 +8,35 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Automated Login and Problem Scraping (Priority: P1)
 
-A user runs the bot, which logs into MetaCTF.com using credentials from the .env file, selects the correct CTF environment, and scrapes all active problems (including links and downloadable files) to a local directory for offline analysis.
+### User Story 1 - Interactive Login and Problem Selection (Priority: P1)
 
-**Why this priority**: This is the foundation for all further automation; without reliable login and scraping, no other automation is possible.
+A user runs the bot, which logs into MetaCTF.com using credentials from the .env file, selects the correct CTF environment, and retrieves a list of unsolved problems. The bot displays the list in the terminal and prompts the user to select which problem to scrape and solve. Only the selected problem is scraped, analyzed, and attempted.
 
-**Independent Test**: Can be fully tested by running the bot and verifying that all active problems and their resources are saved locally for the selected environment.
+**Why this priority**: This is the foundation for all further automation; without reliable login and interactive selection, no other automation is possible.
+
+**Independent Test**: Can be fully tested by running the bot, verifying that the list of unsolved problems is shown, and that only the selected problem is scraped and solved.
 
 **Acceptance Scenarios**:
 
-1. **Given** valid credentials and a target environment in .env, **When** the bot is run, **Then** it logs in, selects the correct environment, and saves all active problems (with links and files) locally.
-2. **Given** invalid credentials, **When** the bot is run, **Then** it fails gracefully and reports the error.
+1. **Given** valid credentials and a target environment in .env, **When** the bot is run, **Then** it logs in, selects the correct environment, lists unsolved problems, and prompts the user for selection.
+2. **Given** a user selection, **When** the user chooses a problem, **Then** the bot scrapes, analyzes, and attempts to solve only that problem.
+3. **Given** invalid credentials, **When** the bot is run, **Then** it fails gracefully and reports the error.
 
 ---
 
-### User Story 2 - Automated Problem Solving and Flag Submission (Priority: P2)
 
-The bot iterates through each saved problem, analyzes the files and links, attempts to solve the problem by searching for MetaCTF{flag} patterns, and submits the flag in the solution field on MetaCTF.com.
+### User Story 2 - Interactive Problem Solving and Flag Submission (Priority: P2)
 
-**Why this priority**: Automating the solve-and-submit loop is the core value proposition of the bot.
+After the user selects a problem, the bot scrapes the problem, analyzes its files and links, attempts to solve the problem by searching for MetaCTF{flag} patterns, and submits the flag in the solution field on MetaCTF.com. The process repeats or exits as desired by the user.
 
-**Independent Test**: Can be fully tested by running the bot on a set of known problems and verifying that correct flags are found and submitted.
+**Why this priority**: Automating the solve-and-submit loop for a user-selected problem is the core value proposition of the bot.
+
+**Independent Test**: Can be fully tested by running the bot, selecting a problem, and verifying that the correct flag is found and submitted for that problem only.
 
 **Acceptance Scenarios**:
 
-1. **Given** a set of saved problems, **When** the bot analyzes them, **Then** it finds MetaCTF{flag} values and submits them to the correct solution fields.
+1. **Given** a list of unsolved problems, **When** the user selects a problem, **Then** the bot scrapes, analyzes, and attempts to solve and submit the flag for only that problem.
 2. **Given** a problem with no flag present, **When** the bot analyzes it, **Then** it skips or reports the problem as unsolved.
 
 ---
@@ -89,3 +92,10 @@ The bot provides clear logging and error handling throughout the process, includ
 - **SC-002**: 90%+ of problems with a MetaCTF{flag} present are solved and submitted automatically.
 - **SC-003**: All errors (login, scraping, submission) are logged with actionable messages.
 - **SC-004**: No direct commits to main branch; all work is on feature branches with frequent, descriptive commits.
+
+- **SC-005**: The bot completes a full CTF scrape/solve/submit cycle (up to 500 problems) in under 10 minutes on a typical broadband connection.
+
+## Performance and Scale
+
+- The bot should process and submit all problems for a CTF environment (typically 100–200 problems) within 10 minutes, with <1% error rate for scraping/submission.
+- Designed for single-user automation, targeting CTFs with up to 500 problems and 1000 file downloads per run.
