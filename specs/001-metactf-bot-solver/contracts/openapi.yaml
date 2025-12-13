@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info:
+  title: MetaCTF Bot Solver API
+  version: 1.0.0
+paths:
+  /login:
+    post:
+      summary: Log in to MetaCTF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                target_env:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+  /problems:
+    get:
+      summary: List all active problems for the selected environment
+      responses:
+        '200':
+          description: List of problems
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Problem'
+  /problems/{id}/download:
+    post:
+      summary: Download all files for a problem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Files downloaded
+  /problems/{id}/solve:
+    post:
+      summary: Attempt to solve a problem and submit the flag
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Flag submitted
+        '400':
+          description: No flag found or submission failed
+components:
+  schemas:
+    Problem:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        links:
+          type: array
+          items:
+            type: string
+        files:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+        solution_field_selector:
+          type: string
