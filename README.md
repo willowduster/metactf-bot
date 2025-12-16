@@ -32,13 +32,43 @@ A fully autonomous MetaCTF competition bot that logs in, scrapes problems, solve
    ```
 
 
+
+
 ## Usage
-Run the bot from the project root:
+To run the MetaCTF bot and Copilot watcher with merged output directly from chat, use:
 ```powershell
-.venv\Scripts\python.exe src/cli/solve_and_submit.py
+.venv\Scripts\python.exe src/cli/chat_control.py
 ```
-- The bot will log in, scrape all problems, attempt to solve and submit flags, and log results.
+
+- This will start both the bot and the Copilot watcher, merging their output in real time.
+- All [COPILOT] and watcher events will be visible in the chat/terminal.
 - Debug artifacts (screenshots, HTML) and all scraped files are saved in the `data/` folder (which is gitignored by default).
+
+### CLI Tools
+Use the consolidated CLI tools in `src/cli/` for targeted operations and debugging.
+
+- **Run heuristics on MCP for a problem:**
+```powershell
+.venv\Scripts\python.exe -m src.cli.mcp_heuristics --problem-id problem-05 --paths /tmp/metactf/problem-05
+```
+
+- **Check submission history for a problem:**
+```powershell
+.venv\Scripts\python.exe -m src.cli.submission_manager check --problem-id problem-05
+```
+
+- **Submit a flag for a problem:**
+```powershell
+.venv\Scripts\python.exe -m src.cli.submission_manager submit --problem-id problem-05 --flag "MetaCTF{example_flag}"
+```
+
+- **Run the autosolver orchestrator (runs heuristics and attempts solves):**
+```powershell
+.venv\Scripts\python.exe -m src.cli.autosolver --problem-id problem-05 --run-heuristics
+```
+
+- **Archived one-off scripts:** original per-problem scripts were moved to `src/cli/archived/` for reference.
+- **Analysis outputs:** MCP analysis, heuristics results, and other debug artifacts are written to `data/copilot_context/`.
 
 ## Notes
 - All configuration is via `.env`.
@@ -46,6 +76,10 @@ Run the bot from the project root:
 - For debugging, set Playwright to non-headless mode in `login.py` if needed.
 - All logs are written to the console and `automation.log` (if configured).
 
+## Network Fetch Policy
+- **Paused by default:** Automated fetching of external problem-linked URLs (HTTP/HTTPS) is paused to avoid unsolicited network requests.
+- **User control:** Fetching can be resumed only with an explicit user approval or command; no external downloads or remote fetches will be performed automatically.
+- **Local-first analysis:** The bot will continue to analyze any files already downloaded into `data/` without performing new network requests.
 ## Troubleshooting
 - If you see `IndentationError` or similar, ensure your files use only spaces for indentation.
 - If Playwright is not installed, run `pip install playwright` and `python -m playwright install` in your venv.
